@@ -1,0 +1,19 @@
+name: Weekly market report
+on:
+  schedule:
+    - cron: "0 22 * * 0"   # Sundays 22:00 UTC (6pm Eastern during daylight time, 5pm in winter)
+  workflow_dispatch: {}      # lets you run it manually from the Actions tab
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install requests
+      - run: python weekly_report.py
+        env:
+          FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          REPORT_TO: muhammadfarooq786@gmail.com
